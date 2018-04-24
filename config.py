@@ -1,0 +1,12 @@
+ANGLE_DELTA_CORRECTION = 0.2
+
+TRAINING_DATA_DIR = "/data/Udacity-Self-Driving-Sim/data/"
+TRAINING_DATA_FILE = "driving_log.csv"
+
+KEEP_PROB = 0.5
+BETA = 0
+BATCH_SIZE = 128
+SAVE_FOLDER = "./cp/"
+LOG_FOLDER = "./log/"
+LOG_INTERVAL = 1
+SAVE_INTERVAL = 5000
