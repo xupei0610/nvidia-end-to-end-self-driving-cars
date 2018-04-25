@@ -9,7 +9,7 @@ This end-to-end system is an implementation of predicting *steering* angle for s
 
 Its network architecture is
 
-    RGB Image -> Convolution Layers x 5 -> Fully-Connected Layers x 5 -> Prediction Result
+    RGB Image captured by Frontal Camera -> Convolution Layers x 5 -> Fully-Connected Layers x 5 -> Prediction Result
 
 with size of each output (channel @ height x width)
 
@@ -17,12 +17,20 @@ with size of each output (channel @ height x width)
 
 The first three convolution layers have a 5x5 kernel with 2x2 stride. The last two convolution layers have a 3x3 kernel with 1x1 stride. No padding is used.
 
-Mean Squared Error (MSE) is used for training.
+Human driving data and Mean Squared Error (MSE) loss are used for training.
+
+### Data Augmentation
+
+It is very time consuming and annoying to collect data for almost all behavior cloning tasks.
+
+The original paper augments data by adding artificial shift and rotations.
+
+We implement data augmentation by rotations and using images captured by left, right cameras installed on the car.  
 
 ### Modification
 
 There are some modifications we made beyond the original paper.
-+ [BathNorm](https://www.tensorflow.org/api_docs/python/tf/contrib/layers/batch_norm) is attached to each convolution layers.
++ [BatchNorm](https://www.tensorflow.org/api_docs/python/tf/contrib/layers/batch_norm) is attached to each convolution layers.
 + [ELU](https://www.tensorflow.org/api_docs/python/tf/nn/elu) is used as activation following each BatchNorm layers.
 + 1x1 Convolution Layers are used to replace fully-connected layers
 + [Dropout](https://www.tensorflow.org/api_docs/python/tf/nn/dropout) is used at the position between the convolution layer and the fully-connected layer.
