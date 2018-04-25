@@ -18,12 +18,12 @@ def load_training_data():
     with open(os.path.join(config.TRAINING_DATA_DIR, config.TRAINING_DATA_FILE), 'r') as f:
         reader = csv.reader(f)
         next(reader)
-        for center, left, right, steering, _, _, speed in reader:
+        for center, left, right, steering, _, _, _ in reader:
             sa = float(steering)
             X.extend([center.strip(), left.strip(), right.strip()])
-            Y.extend([sa, sa+config.ANGLE_DELTA_CORRECTION, sa-config.ANGLE_DELTA_CORRECTION])
-            # X.extend([center.strip()])
-            # Y.extend([sa])
+            Y.extend([sa,
+                      sa+config.ANGLE_DELTA_CORRECTION_LEFT,
+                      sa+config.ANGLE_DELTA_CORRECTION_RIGHT])
     return X, Y
         
 @static_vars(offset=0, orders=[])
@@ -45,10 +45,10 @@ def next_batch(X, Y):
         im = cv2.imread(os.path.join(config.TRAINING_DATA_DIR, X[next_batch.offset]), cv2.IMREAD_COLOR)
 
         if next_batch.offset % 2 == 0:
-            X_batch.append(model.preprocess(cv2.flip(im, 1)))
+            X_batch.append(model.preprocess(cv2.flip(im, 1), config.INPUT_IMAGE_CROP))
             Y_batch.append(-Y[next_batch.offset])
         else:
-            X_batch.append(model.preprocess(im))
+            X_batch.append(model.preprocess(im, config.INPUT_IMAGE_CROP))
             Y_batch.append(Y[next_batch.offset])
 
         next_batch.offset += 1
@@ -58,7 +58,7 @@ def next_batch(X, Y):
 X, keep_prob, pred = model.build_net()
 Y = tf.placeholder(tf.float32, [None], "human_data")
 
-loss = model.build_loss(Y, pred, config.BETA, tf.trainable_variables())
+loss = model.build_loss(Y, pred, config.REGULARIZER_COEF, tf.trainable_variables())
 
 global_step = tf.Variable(0, dtype=tf.int32, trainable=False, name="global_step")
 optimizer = tf.train.AdamOptimizer(1e-6, name="optimizer").minimize(loss, global_step=global_step)

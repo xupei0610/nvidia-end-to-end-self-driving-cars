@@ -55,9 +55,11 @@ def fc_layer(name, X, in_channels, out_filters, trainable=True,
             Y = tf.nn.elu(Y)
     return Y, w, b
 
-def preprocess(cv_mat_im):
-    im = cv2.cvtColor(cv2.resize(cv_mat_im[60:-25, :, :], (200, 66), cv2.INTER_AREA), cv2.COLOR_BGR2YUV)
+
+def preprocess(cv_mat_im, crop):
+    im = cv2.cvtColor(cv2.resize(cv_mat_im[crop[0]:crop[1], crop[2]:crop[3], :], (200, 66), cv2.INTER_AREA), cv2.COLOR_BGR2YUV)
     return im/127.5 - 1.0
+
 
 def build_net(trainable=True):
     keep_prob = tf.placeholder(tf.float32, name="keep_prob")

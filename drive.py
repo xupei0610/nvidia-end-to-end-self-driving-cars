@@ -5,6 +5,25 @@ import eventlet
 import eventlet.wsgi
 from flask import Flask
 
+class PIController:
+    def __init__(self, Kp=0.1, Ki=0.002):
+        self.Kp = Kp
+        self.Ki = Ki
+        self.target = 22 
+        self.integral = 0.0
+
+    def init(self):
+        self.integral = 0.0
+
+    def set_target(self, sp):
+        self.target = sp
+
+    def update(self, measurement):
+        err = self.target - measurement
+        self.integral += err
+        return self.Kp*err + self.Ki*self.integral
+
+
 class Simulator:
     def __init__(self, call_back_fn):
         self.sio = socketio.Server()
