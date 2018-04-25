@@ -5,7 +5,7 @@ This is an implementation of [Nvidia End-to-End Self-Driving Cars](https://image
 
 ## Introduction
 
-This end-to-end system is an implementation of predicting *steering* angle for self-driving cars using behavior cloning method. 
+This end-to-end system is an implementation of predicting steering angle for self-driving cars using behavior cloning method. The prediction task is modeled as a regression problem solved by CNN using training data collected from human driving data. 
 
 Its network architecture is
 
@@ -27,13 +27,14 @@ The original paper augments data by adding artificial shift and rotations.
 
 We implement data augmentation by rotations and using images captured by left, right cameras installed on the car.  
 
-### Modification
+### Modifications
 
 There are some modifications we made beyond the original paper.
 + [BatchNorm](https://www.tensorflow.org/api_docs/python/tf/contrib/layers/batch_norm) is attached to each convolution layers.
 + [ELU](https://www.tensorflow.org/api_docs/python/tf/nn/elu) is used as activation following each BatchNorm layers.
 + 1x1 Convolution Layers are used to replace fully-connected layers
 + [Dropout](https://www.tensorflow.org/api_docs/python/tf/nn/dropout) is used at the position between the convolution layer and the fully-connected layer.
++ L2 Regularization is used to prevent overfitting.
 
 See `model.py` or run `tensorboard --logdir=./pre-trained/log` to see more details.
 
@@ -48,7 +49,7 @@ Python Package Dependencies:
 
 Configuration File: `config.py`
 
-### Train
+### Training
 
 1. Fill in your own training dataset path in `config.py`
     
@@ -89,4 +90,8 @@ The communication between the simulator and the model script depends on the foll
 + Flask
 + socketio
 
-See [Issue 1](https://github.com/xupei0610/nvidia-end-to-end-self-driving-cars/issues/1) if a similar problem is encountered after installing `scoketio` by `pip`.
+See [Issue#1](https://github.com/xupei0610/nvidia-end-to-end-self-driving-cars/issues/1) if a similar problem is encountered after installing `scoketio` by `pip`.
+
+#### Demo
+
+[Video Demo](https://youtu.be/-dd-DMM3Bgs)
